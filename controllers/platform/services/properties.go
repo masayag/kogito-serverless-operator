@@ -161,12 +161,18 @@ func GenerateDataIndexWorkflowProperties(workflow *operatorapi.SonataFlow, platf
 	props.Set(constants.KogitoProcessInstancesEnabled, "false")
 	if workflow != nil && !profiles.IsDevProfile(workflow) && dataIndexEnabled(platform) {
 		props.Set(constants.KogitoProcessInstancesEnabled, "true")
+		props.Set(constants.KogitoProcessDefinitionsEnabled, "true")
 		di := NewDataIndexService(platform)
+		props.Set("mp.messaging.outgoing.kogito-processdefinitions-events.url",
+			fmt.Sprintf("%s://%s.%s/definitions", constants.DataIndexServiceURLProtocol, di.GetServiceName(), platform.Namespace))
+		// print props to log
+		klog.V(log.D).InfoS("Data Index properties - Before", "properties", props.String())
 		p, err := di.GenerateWorkflowProperties()
 		if err != nil {
 			return nil, err
 		}
 		props.Merge(p)
+		klog.V(log.D).InfoS("Data Index properties - After", "properties", props.String())
 	}
 	props.Sort()
 	return props, nil

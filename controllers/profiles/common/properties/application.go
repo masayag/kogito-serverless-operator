@@ -151,7 +151,7 @@ func NewAppPropertyHandler(workflow *operatorapi.SonataFlow, platform *operatora
 	props := properties.NewProperties()
 	props.Set(constants.KogitoEventsUserTaskEnabled, "false")
 	props.Set(constants.KogitoEventsVariablesEnabled, "false")
-	props.Set(constants.KogitoProcessDefinitionsEnabled, "false")
+	props.Set(constants.KogitoProcessDefinitionsEnabled, "true")
 	if platform != nil {
 		p, err := services.GenerateDataIndexWorkflowProperties(workflow, platform)
 		if err != nil {
